@@ -2,6 +2,7 @@
   display: flex;
   justify-content: flex-start;
   margin-left: 20px;
+  font-size: 20px;
 }
 
 .player-card{
@@ -11,12 +12,20 @@
 
 .pack-user{
   color: red;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .winner-player{
   color: cadetblue;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 22px;
+}
+
+.winner-details{
+  color: rgb(29, 85, 66);
+  font-size: larger;
+  margin-left: 30px;
 }
 
 .button-86 {

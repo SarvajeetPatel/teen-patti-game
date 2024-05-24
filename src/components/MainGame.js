@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { CardSet } from './RandomCards'
 
 function MainGame() {
     const [winner, setWinner] = useState([])
@@ -40,27 +41,27 @@ function MainGame() {
     }
     const [currCards, setCurrCards] = useState(demoCards)
 
-    useEffect(() => {
-        const newInterval = setInterval(() => {
-            setTimer(prevTime => {
-                if (prevTime > 0) {
-                    return prevTime - 1;
-                } else {
-                    handlePack(currUser)
-                    if (currUser < Object.keys(currCards).length) {
-                        setCurrUser(currUser + 1)
-                    } else {
-                        setCurrUser(0)
-                    }
-                    setTimer(15)
-                    clearInterval(newInterval);
-                    return 0;
-                }
-            });
-        }, 1000);
-        return () => clearInterval(newInterval);
-        // eslint-disable-next-line
-    }, [timer])
+    // useEffect(() => {
+    //     const newInterval = setInterval(() => {
+    //         setTimer(prevTime => {
+    //             if (prevTime > 0) {
+    //                 return prevTime - 1;
+    //             } else {
+    //                 handlePack(currUser)
+    //                 if (currUser < Object.keys(currCards).length) {
+    //                     setCurrUser(currUser + 1)
+    //                 } else {
+    //                     setCurrUser(0)
+    //                 }
+    //                 setTimer(15)
+    //                 clearInterval(newInterval);
+    //                 return 0;
+    //             }
+    //         });
+    //     }, 1000);
+    //     return () => clearInterval(newInterval);
+    //     // eslint-disable-next-line
+    // }, [timer])
 
     useEffect(() => {
         let tempWinner = []
@@ -264,7 +265,6 @@ function MainGame() {
         updateObject(index)
         setCurrCards(tempCards)
     }
-    console.log(newObject, 'new', Object.keys(newObject).length)
 
     const handlePack = (index) => {
         let tempCards = currCards
@@ -279,7 +279,7 @@ function MainGame() {
                 return newObj;
             }, {}
             );
-        console.log(newCard, 'in card')
+
         setNewObject(newCard)
         updateObject(index)
         setCurrCards(tempCards)
@@ -292,7 +292,7 @@ function MainGame() {
             {Object.keys(currCards).map(card => (
                 <>
                     <div className='card-listing'>
-                        <h4> Player {card} </h4>
+                        Player {card}
                         {
                             currCards[card].map((playerCard, cardIndex) => (
                                 <div className={(playerCard.status === 'pack' ? 'pack-user' : 'winner-player')}>
@@ -313,7 +313,8 @@ function MainGame() {
                     </div>
                 </>
             ))}
-            {winner.length > 0 && <h3> Winner is Player {winner[0]?.player} and has {winner[0]?.type} </h3>}
+            {winner.length > 0 && <div className='winner-details'> Winner is Player {winner[0]?.player} and has {winner[0]?.type} set! </div>}
+            <CardSet />
         </>
     )
 }
