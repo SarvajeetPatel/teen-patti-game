@@ -1,71 +1,65 @@
 import React, { useEffect, useState } from 'react'
-import { CardSet } from './RandomCards'
+import Cards from '../data/Cards.json'
 
 function MainGame() {
     const [winner, setWinner] = useState([])
     const [timer, setTimer] = useState(15)
+    const [flag, setFlag] = useState(false)
     const [currUser, setCurrUser] = useState(0)
     const [newObject, setNewObject] = useState({})
+    const [currCards, setCurrCards] = useState({ 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] })
 
-    let demoCards = {
-        0: [
-            { color: "club", value: "11", name: 'Jack', status: 'pending' },
-            { color: "heart", value: "3", name: '3', status: 'pending' },
-            { color: "heart", value: "11", name: 'Jack', status: 'pending' }
-        ],
-        1: [
-            { color: "diamond", value: "2", name: '2', status: 'pending' },
-            { color: "diamond", value: "13", name: 'King', status: 'pending' },
-            { color: "diamond", value: "1", name: 'Ace', status: 'pending' }
-        ],
-        2: [
-            { color: "club", value: "12", name: 'Queen', status: 'pending' },
-            { color: "club", value: "13", name: 'King', status: 'pending' },
-            { color: "club", value: "1", name: 'Ace', status: 'pending' }
-        ],
-        3: [
-            { color: "diamond", value: "12", name: 'Queen', status: 'pending' },
-            { color: "diamond", value: "13", name: 'King', status: 'pending' },
-            { color: "spade", value: "1", name: 'Ace', status: 'pending' }
-        ],
-        4: [
-            { color: "club", value: "9", name: '9', status: 'pending' },
-            { color: "diamond", value: "9", name: '9', status: 'pending' },
-            { color: "heart", value: "9", name: '9', status: 'pending' }
-        ],
-        5: [
-            { color: "diamond", value: "11", name: 'Jack', status: 'pending' },
-            { color: "spade", value: "11", name: 'Jack', status: 'pending' },
-            { color: "diamond", value: "10", name: '10', status: 'pending' }
-        ]
-    }
-    const [currCards, setCurrCards] = useState(demoCards)
+    useEffect(() => {
+        const existingCard = JSON.parse(localStorage.getItem('cards list')) || {}
+        if (Object.keys(existingCard).length === 0) {
+            let k = 0;
+            let cardObject = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] }
+            console.log(Cards, 'acrds')
+            let TempCards = Cards
 
-    // useEffect(() => {
-    //     const newInterval = setInterval(() => {
-    //         setTimer(prevTime => {
-    //             if (prevTime > 0) {
-    //                 return prevTime - 1;
-    //             } else {
-    //                 handlePack(currUser)
-    //                 if (currUser < Object.keys(currCards).length) {
-    //                     setCurrUser(currUser + 1)
-    //                 } else {
-    //                     setCurrUser(0)
-    //                 }
-    //                 setTimer(15)
-    //                 clearInterval(newInterval);
-    //                 return 0;
-    //             }
-    //         });
-    //     }, 1000);
-    //     return () => clearInterval(newInterval);
-    //     // eslint-disable-next-line
-    // }, [timer])
+            for (let i = 0; i < TempCards.length; i++) {
+                let shuffle = Math.floor(Math.random() * (TempCards.length));
+                [TempCards[i], TempCards[shuffle]] = [TempCards[shuffle], TempCards[i]];
+            }
+
+            while (k < 18) {
+                // eslint-disable-next-line
+                Object.keys(cardObject).map(cardKey => cardObject[cardKey].push(TempCards[Number(cardKey) + k]))
+                k += 6
+            }
+            localStorage.setItem('cards list', JSON.stringify(cardObject))
+            setCurrCards(cardObject)
+        } else {
+            setCurrCards(existingCard)
+        }
+        // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
+        const newInterval = setInterval(() => {
+            setTimer(prevTime => {
+                if (prevTime > 0) {
+                    return prevTime - 1;
+                } else {
+                    handlePack(currUser)
+                    if (currUser < Object.keys(currCards).length) {
+                        setCurrUser(currUser + 1)
+                    } else {
+                        setCurrUser(0)
+                    }
+                    setTimer(15)
+                    clearInterval(newInterval);
+                    return 0;
+                }
+            });
+        }, 1000);
+        return () => clearInterval(newInterval);
+        // eslint-disable-next-line
+    }, [timer])
 
     useEffect(() => {
         let tempWinner = []
-        if (Object.keys(newObject).length === 2) {
+        if (Object.keys(newObject).length === 1 || flag) {
             Object.keys(newObject).map((cards) => {
                 let tempCard = newObject[cards], diff1, diff2
                 let sortedArray = tempCard.sort((a, b) => (a.value - b.value) > 0 ? 1 : -1)
@@ -185,9 +179,9 @@ function MainGame() {
                         sortedArray.map(currValue => currPlayerCards.push(currValue.value))
                         newObject[tempWinner[0].player].sort((a, b) => (a.value - b.value) > 0 ? 1 : -1).map(tempVal => prevWinnerCard.push(tempVal.value))
 
-                        if (prevWinnerCard[0] === '1' && currPlayerCards[0] !== '1') {
+                        if (prevWinnerCard[0] === '1' && prevWinnerCard[1] === '1' && currPlayerCards[0] !== '1') {
                             return true
-                        } else if (prevWinnerCard[0] !== '1' && currPlayerCards[0] === '1') {
+                        } else if (prevWinnerCard[0] !== '1' && currPlayerCards[0] === '1' && currPlayerCards[1] === '1') {
                             tempWinner = [{ type: 'pair', player: cards }]
                         } else if (prevWinnerCard[0] === currPlayerCards[0]) {
                             if (currPlayerCards[2] - prevWinnerCard[2] > 0) {
@@ -234,12 +228,13 @@ function MainGame() {
                 }
                 return 0;
             })
+            localStorage.removeItem('cards list')
             setWinner(tempWinner)
             setTimer(0)
             setCurrUser(0)
         }
         // eslint-disable-next-line
-    }, [newObject])
+    }, [newObject, flag])
 
     const updateObject = (index) => {
         let i = (Number(index) < 5) ? Number(index) + 1 : 0
@@ -289,32 +284,35 @@ function MainGame() {
         <>
             <h2> Players Cards are :  </h2>
 
-            {Object.keys(currCards).map(card => (
-                <>
-                    <div className='card-listing'>
-                        Player {card}
-                        {
-                            currCards[card].map((playerCard, cardIndex) => (
-                                <div className={(playerCard.status === 'pack' ? 'pack-user' : 'winner-player')}>
-                                    <ul key={cardIndex}>
-                                        <li> {playerCard.name} of {playerCard.color} </li>
-                                    </ul>
-                                </div>
-                            ))
-                        }
-                        {((winner.length === 0) && (currUser === Number(card)) && (currCards[card][0].status !== 'pack')) &&
-                            <>
-                                <button className='button-86' type='button' onClick={() => handleCall(card)}> CALL </button>
-                                <button className='button-86' type='button' onClick={() => handlePack(card)}> PACK </button>
-                                &nbsp; &nbsp;
-                                <h5> {timer > 9 ? timer : `0${timer}`} seconds left! </h5>
-                            </>
-                        }
-                    </div>
-                </>
-            ))}
+            {currCards[0].length > 0 &&
+                Object.keys(currCards)?.map(card => (
+                    <>
+                        <div className='card-listing'>
+                            Player {card}
+                            {
+                                currCards?.[card]?.map((playerCard, cardIndex) => (
+                                    <div className={(playerCard?.status === 'pack' ? 'pack-user' : 'winner-player')}>
+                                        <ul key={cardIndex}>
+                                            <li> {playerCard?.name} of {playerCard?.color} </li>
+                                        </ul>
+                                    </div>
+                                ))
+                            }
+                            {((winner.length === 0) && (currUser === Number(card)) && (currCards[card][0].status !== 'pack')) &&
+                                <>
+                                    <button className='button-86' type='button' onClick={() => handleCall(card)}> CALL </button>
+                                    <button className='button-86' type='button' onClick={() => handlePack(card)}> PACK </button>
+                                    {Object.keys(newObject).length === 2 &&
+                                        <button className='button-86' type='button' onClick={() => setFlag(true)}> SHOW </button>
+                                    }
+                                    &nbsp; &nbsp;
+                                    <h5> {timer > 9 ? timer : `0${timer}`} seconds left! </h5>
+                                </>
+                            }
+                        </div>
+                    </>
+                ))}
             {winner.length > 0 && <div className='winner-details'> Winner is Player {winner[0]?.player} and has {winner[0]?.type} set! </div>}
-            <CardSet />
         </>
     )
 }

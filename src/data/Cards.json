@@ -1,210 +1,314 @@
 [
     {
         "color": "spade",
-        "value": "A"
+        "value": "1",
+        "name": "A",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "K"
+        "value": "13",
+        "name": "K",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "Q"
+        "value": "12",
+        "name": "Q",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "J"
+        "value": "11",
+        "name": "J",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "10"
+        "value": "10",
+        "name": "10",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "9"
+        "value": "9",
+        "name": "9",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "8"
+        "value": "8",
+        "name": "8",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "7"
+        "value": "7",
+        "name": "7",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "6"
+        "value": "6",
+        "name": "6",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "5"
+        "value": "5",
+        "name": "5",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "4"
+        "value": "4",
+        "name": "4",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "3"
+        "value": "3",
+        "name": "3",
+        "status": "pending"
     },
     {
         "color": "spade",
-        "value": "2"
+        "value": "2",
+        "name": "2",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "A"
+        "value": "1",
+        "name": "A",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "K"
+        "value": "13",
+        "name": "K",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "Q"
+        "value": "12",
+        "name": "Q",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "J"
+        "value": "11",
+        "name": "J",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "10"
+        "value": "10",
+        "name": "10",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "9"
+        "value": "9",
+        "name": "9",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "8"
+        "value": "8",
+        "name": "8",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "7"
+        "value": "7",
+        "name": "7",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "6"
+        "value": "6",
+        "name": "6",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "5"
+        "value": "5",
+        "name": "5",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "4"
+        "value": "4",
+        "name": "4",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "3"
+        "value": "3",
+        "name": "3",
+        "status": "pending"
     },
     {
         "color": "club",
-        "value": "2"
+        "value": "2",
+        "name": "2",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "A"
+        "value": "1",
+        "name": "A",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "K"
+        "value": "13",
+        "name": "K",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "Q"
+        "value": "12",
+        "name": "Q",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "J"
+        "value": "11",
+        "name": "J",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "10"
+        "value": "10",
+        "name": "10",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "9"
+        "value": "9",
+        "name": "9",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "8"
+        "value": "8",
+        "name": "8",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "7"
+        "value": "7",
+        "name": "7",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "6"
+        "value": "6",
+        "name": "6",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "5"
+        "value": "5",
+        "name": "5",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "4"
+        "value": "4",
+        "name": "4",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "3"
+        "value": "3",
+        "name": "3",
+        "status": "pending"
     },
     {
         "color": "heart",
-        "value": "2"
+        "value": "2",
+        "name": "2",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "A"
+        "value": "1",
+        "name": "A",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "K"
+        "value": "13",
+        "name": "K",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "Q"
+        "value": "12",
+        "name": "Q",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "J"
+        "value": "11",
+        "name": "J",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "10"
+        "value": "10",
+        "name": "10",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "9"
+        "value": "9",
+        "name": "9",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "8"
+        "value": "8",
+        "name": "8",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "7"
+        "value": "7",
+        "name": "7",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "6"
+        "value": "6",
+        "name": "6",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "5"
+        "value": "5",
+        "name": "5",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "4"
+        "value": "4",
+        "name": "4",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "3"
+        "value": "3",
+        "name": "3",
+        "status": "pending"
     },
     {
         "color": "diamond",
-        "value": "2"
+        "value": "2",
+        "name": "2",
+        "status": "pending"
     }
 ]
