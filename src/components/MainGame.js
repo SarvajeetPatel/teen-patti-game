@@ -10,6 +10,7 @@ function MainGame() {
     const [currCards, setCurrCards] = useState({ 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] })
     const [total, setTotal] = useState(0)
     const [blindAmt, setBlindAmt] = useState(20)
+    const [callAmt, setCallAmt] = useState(blindAmt * 2)
 
     useEffect(() => {
         const existingCard = JSON.parse(localStorage.getItem('cards list')) || {}
@@ -17,6 +18,7 @@ function MainGame() {
         const existingTime = JSON.parse(localStorage.getItem('time')) || 15
         const existingMoney = JSON.parse(localStorage.getItem('money count')) || 0
         const existingBlindMoney = JSON.parse(localStorage.getItem('blind amount')) || 0
+        const existingCallMoney = JSON.parse(localStorage.getItem('call amount')) || existingBlindMoney * 2
 
         if (Object.keys(existingCard).length === 0) {
             let k = 0;
@@ -55,6 +57,7 @@ function MainGame() {
             setCurrUser(existingUser)
             setTimer(existingTime)
             setBlindAmt(existingBlindMoney)
+            setCallAmt(existingCallMoney)
         }
         // eslint-disable-next-line
     }, [])
@@ -82,12 +85,16 @@ function MainGame() {
     }, [timer])
 
     useEffect(() => {
-        localStorage.setItem('cards list', JSON.stringify(currCards))
-        localStorage.setItem('time', timer)
-        localStorage.setItem('money count', total)
-        localStorage.setItem('current player', currUser)
-        localStorage.setItem('blind amount', blindAmt)
-    }, [timer, currCards, total, currUser, blindAmt])
+        if (winner.length === 0) {
+            localStorage.setItem('cards list', JSON.stringify(currCards))
+            localStorage.setItem('time', timer)
+            localStorage.setItem('money count', total)
+            localStorage.setItem('current player', currUser)
+            localStorage.setItem('blind amount', blindAmt)
+            localStorage.setItem('call amount', callAmt)
+        }
+        // eslint-disable-next-line 
+    }, [timer, currCards, total, currUser, blindAmt, callAmt])
 
     useEffect(() => {
         let tempWinner = []
@@ -268,6 +275,7 @@ function MainGame() {
             localStorage.removeItem('time')
             localStorage.removeItem('money count')
             localStorage.removeItem('blind amount')
+            localStorage.removeItem('call amount')
         }
         // eslint-disable-next-line
     }, [newObject, flag])
@@ -288,7 +296,7 @@ function MainGame() {
     }
 
     const handleCall = (index) => {
-        let tempCards = currCards, callAmt = blindAmt * 2
+        let tempCards = currCards
 
         if (tempCards[Number(index)][0].status === 'blind') {
             tempCards[Number(index)][0].money.push(blindAmt)
@@ -337,18 +345,22 @@ function MainGame() {
         tempCard[Number(index)][0].status = 'call'
         tempCard[Number(index)][1].status = 'call'
         tempCard[Number(index)][2].status = 'call'
-
+        setCallAmt(blindAmt * 2)
         setCurrCards({ ...tempCard })
     }
 
     const handleRaise = (index) => {
-        let tempBlindAmt = blindAmt, tempCard = currCards
+        let tempBlindAmt = blindAmt, tempCard = currCards, tempCallAmt = callAmt
         if (tempCard[index][0].status === 'blind') {
             tempBlindAmt += 10
+            setBlindAmt(tempBlindAmt)
+            setCallAmt(tempBlindAmt * 2)
         } else if (tempCard[index][0].status === 'call') {
-            tempBlindAmt = (tempBlindAmt * 2) + 10
+            tempCallAmt += 10
+            tempBlindAmt = tempCallAmt / 2
+            setBlindAmt(tempBlindAmt)
+            setCallAmt(tempCallAmt)
         }
-        setBlindAmt(tempBlindAmt)
     }
 
     return (
@@ -380,7 +392,8 @@ function MainGame() {
                                 <>
                                     <button className='button-86' type='button' onClick={() => handleCall(card)}> {currCards[card][0].status === 'blind' ? 'BLIND' : 'CALL'} </button>
                                     <button className='button-86' type='button' onClick={() => handlePack(card)}> PACK </button>
-                                    <span> {currCards[card][0].status === 'blind' ? blindAmt : blindAmt * 2} </span>
+                                    <span> {currCards[card][0].status === 'blind' && blindAmt} </span>
+                                    <span> {currCards[card][0].status === 'call' && callAmt} </span>
                                     <button className='button-86' type='button' onClick={() => handleRaise(card)}> + </button>
 
                                     {Object.keys(newObject).length === 2 &&
