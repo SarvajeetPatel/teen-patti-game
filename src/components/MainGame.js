@@ -8,13 +8,19 @@ function MainGame() {
     const [currUser, setCurrUser] = useState(0)
     const [newObject, setNewObject] = useState({})
     const [currCards, setCurrCards] = useState({ 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] })
+    const [total, setTotal] = useState(0)
+    const [blindAmt, setBlindAmt] = useState(20)
 
     useEffect(() => {
         const existingCard = JSON.parse(localStorage.getItem('cards list')) || {}
+        const existingUser = JSON.parse(localStorage.getItem('current player')) || 0
+        const existingTime = JSON.parse(localStorage.getItem('time')) || 15
+        const existingMoney = JSON.parse(localStorage.getItem('money count')) || 0
+        const existingBlindMoney = JSON.parse(localStorage.getItem('blind amount')) || 0
+
         if (Object.keys(existingCard).length === 0) {
             let k = 0;
             let cardObject = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] }
-            console.log(Cards, 'acrds')
             let TempCards = Cards
 
             for (let i = 0; i < TempCards.length; i++) {
@@ -24,13 +30,31 @@ function MainGame() {
 
             while (k < 18) {
                 // eslint-disable-next-line
-                Object.keys(cardObject).map(cardKey => cardObject[cardKey].push(TempCards[Number(cardKey) + k]))
+                Object.keys(cardObject).map(cardKey => {
+                    if (k === 0 || k === 6 || k === 12) {
+                        TempCards[k].money = ['20']
+                    }
+                    cardObject[cardKey].push(TempCards[Number(cardKey) + k])
+                })
                 k += 6
             }
+
+            let sum = 0;
+            Object.keys(cardObject).forEach((cardsInList) => {
+                cardObject[cardsInList][0].money.forEach((currAmt) => {
+                    sum += Number(currAmt)
+                })
+            })
+            setTotal(sum)
+
             localStorage.setItem('cards list', JSON.stringify(cardObject))
             setCurrCards(cardObject)
         } else {
             setCurrCards(existingCard)
+            setTotal(existingMoney)
+            setCurrUser(existingUser)
+            setTimer(existingTime)
+            setBlindAmt(existingBlindMoney)
         }
         // eslint-disable-next-line
     }, [])
@@ -56,6 +80,14 @@ function MainGame() {
         return () => clearInterval(newInterval);
         // eslint-disable-next-line
     }, [timer])
+
+    useEffect(() => {
+        localStorage.setItem('cards list', JSON.stringify(currCards))
+        localStorage.setItem('time', timer)
+        localStorage.setItem('money count', total)
+        localStorage.setItem('current player', currUser)
+        localStorage.setItem('blind amount', blindAmt)
+    }, [timer, currCards, total, currUser, blindAmt])
 
     useEffect(() => {
         let tempWinner = []
@@ -151,7 +183,6 @@ function MainGame() {
                         sortedArray.map(currValue => currPlayerCards.push(currValue.value))
                         newObject[tempWinner[0].player].sort((a, b) => (a.value - b.value) > 0 ? 1 : -1).map(tempVal => prevWinnerCard.push(tempVal.value))
 
-                        console.log(currPlayerCards, prevWinnerCard)
                         if (currPlayerCards[0] !== '1' && prevWinnerCard[0] === '1') {
                             return true
                         } else if (currPlayerCards[0] === '1' && prevWinnerCard[0] !== '1') {
@@ -207,7 +238,6 @@ function MainGame() {
                         sortedArray.map(currValue => currPlayerCards.push(currValue.value))
                         newObject[tempWinner[0].player].sort((a, b) => (a.value - b.value) > 0 ? 1 : -1).map(tempVal => prevWinnerCard.push(tempVal.value))
 
-                        console.log(currPlayerCards[2] > prevWinnerCard[2])
                         if (prevWinnerCard[0] === '1' && currPlayerCards[0] !== '1') {
                             return true
                         } else if (currPlayerCards[0] === '1' && prevWinnerCard[0] !== '1') {
@@ -228,10 +258,16 @@ function MainGame() {
                 }
                 return 0;
             })
-            localStorage.removeItem('cards list')
+
             setWinner(tempWinner)
             setTimer(0)
             setCurrUser(0)
+
+            localStorage.removeItem('cards list')
+            localStorage.removeItem('current player')
+            localStorage.removeItem('time')
+            localStorage.removeItem('money count')
+            localStorage.removeItem('blind amount')
         }
         // eslint-disable-next-line
     }, [newObject, flag])
@@ -252,13 +288,28 @@ function MainGame() {
     }
 
     const handleCall = (index) => {
-        let tempCards = currCards
-        tempCards[Number(index)][0].status = 'call'
-        tempCards[Number(index)][1].status = 'call'
-        tempCards[Number(index)][2].status = 'call'
+        let tempCards = currCards, callAmt = blindAmt * 2
 
-        updateObject(index)
+        if (tempCards[Number(index)][0].status === 'blind') {
+            tempCards[Number(index)][0].money.push(blindAmt)
+            tempCards[Number(index)][1].money.push(blindAmt)
+            tempCards[Number(index)][2].money.push(blindAmt)
+        } else {
+            tempCards[Number(index)][0].money.push(callAmt)
+            tempCards[Number(index)][1].money.push(callAmt)
+            tempCards[Number(index)][2].money.push(callAmt)
+        }
+
+        let sum = 0;
+        Object.keys(tempCards).forEach((cardsInList) => {
+            tempCards[cardsInList][0].money.forEach((currAmt) => {
+                sum += Number(currAmt)
+            })
+        })
+        setTotal(sum)
+
         setCurrCards(tempCards)
+        updateObject(index)
     }
 
     const handlePack = (index) => {
@@ -268,28 +319,53 @@ function MainGame() {
         tempCards[Number(index)][1].status = 'pack'
         tempCards[Number(index)][2].status = 'pack'
 
-        let newCard = Object.keys(tempCards).filter(objKey => tempCards[objKey][0].status === 'pending' || tempCards[objKey][0].status === 'call')
+        let newCard = Object.keys(tempCards).filter(objKey => tempCards[objKey][0].status === 'blind' || tempCards[objKey][0].status === 'call')
             .reduce((newObj, key) => {
                 newObj[key] = tempCards[key];
                 return newObj;
             }, {}
             );
 
-        setNewObject(newCard)
         updateObject(index)
+        setNewObject(newCard)
         setCurrCards(tempCards)
+    }
+
+    const handleBlindOpen = (index) => {
+        let tempCard = currCards
+
+        tempCard[Number(index)][0].status = 'call'
+        tempCard[Number(index)][1].status = 'call'
+        tempCard[Number(index)][2].status = 'call'
+
+        setCurrCards({ ...tempCard })
+    }
+
+    const handleRaise = (index) => {
+        let tempBlindAmt = blindAmt, tempCard = currCards
+        if (tempCard[index][0].status === 'blind') {
+            tempBlindAmt += 10
+        } else if (tempCard[index][0].status === 'call') {
+            tempBlindAmt = (tempBlindAmt * 2) + 10
+        }
+        setBlindAmt(tempBlindAmt)
     }
 
     return (
         <>
-            <h2> Players Cards are :  </h2>
+            <h2> Players Cards are : </h2>
 
             {currCards[0].length > 0 &&
-                Object.keys(currCards)?.map(card => (
+                Object.keys(currCards).map(card =>
                     <>
                         <div className='card-listing'>
                             Player {card}
                             {
+                                currCards[card][0].status === 'blind' &&
+                                <button className='button-86' type='button' onClick={() => handleBlindOpen(card)}> OPEN </button>
+                            }
+                            {
+                                currCards[card][0].status !== 'blind' &&
                                 currCards?.[card]?.map((playerCard, cardIndex) => (
                                     <div className={(playerCard?.status === 'pack' ? 'pack-user' : 'winner-player')}>
                                         <ul key={cardIndex}>
@@ -298,10 +374,15 @@ function MainGame() {
                                     </div>
                                 ))
                             }
+                            {currCards?.[card]?.[0]?.money?.[currCards?.[card]?.[0]?.money?.length - 1]}
+
                             {((winner.length === 0) && (currUser === Number(card)) && (currCards[card][0].status !== 'pack')) &&
                                 <>
-                                    <button className='button-86' type='button' onClick={() => handleCall(card)}> CALL </button>
+                                    <button className='button-86' type='button' onClick={() => handleCall(card)}> {currCards[card][0].status === 'blind' ? 'BLIND' : 'CALL'} </button>
                                     <button className='button-86' type='button' onClick={() => handlePack(card)}> PACK </button>
+                                    <span> {currCards[card][0].status === 'blind' ? blindAmt : blindAmt * 2} </span>
+                                    <button className='button-86' type='button' onClick={() => handleRaise(card)}> + </button>
+
                                     {Object.keys(newObject).length === 2 &&
                                         <button className='button-86' type='button' onClick={() => setFlag(true)}> SHOW </button>
                                     }
@@ -311,7 +392,8 @@ function MainGame() {
                             }
                         </div>
                     </>
-                ))}
+                )}
+            <h3> Total Amount is : {total} </h3>
             {winner.length > 0 && <div className='winner-details'> Winner is Player {winner[0]?.player} and has {winner[0]?.type} set! </div>}
         </>
     )
