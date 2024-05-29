@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Cards from '../data/Cards.json'
 
-function MainGame() {
+function MainGame({ newUser }) {
     const [winner, setWinner] = useState([])
     const [timer, setTimer] = useState(15)
     const [flag, setFlag] = useState(false)
@@ -121,7 +121,7 @@ function MainGame() {
                         }
                     } else {
                         tempWinner = [{ type: 'triple', player: cards }]
-                    }   
+                    }
                 }
 
                 //COLOR SEQUENCE AND SEQUENCE
@@ -365,6 +365,7 @@ function MainGame() {
 
     return (
         <>
+            <h3> Logged in as : {newUser} </h3>
             <h2> Players Cards are : </h2>
 
             {currCards[0].length > 0 &&

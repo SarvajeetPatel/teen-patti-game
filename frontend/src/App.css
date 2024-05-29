@@ -5,6 +5,10 @@
   font-size: 20px;
 }
 
+.vh-95 {
+  height: 95vh !important;
+}
+
 .player-card{
   display: flex;
   flex-direction: row;
