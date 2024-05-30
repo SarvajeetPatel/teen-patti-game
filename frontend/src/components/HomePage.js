@@ -38,6 +38,7 @@ const HomePage = ({ socket }) => {
             <main className='content'>
                 <div className='container mt-3'>
                     {allUsers.length === 6 && <MainGame newUser={newUser} />}
+                    {(signedUser.userId && allUsers.length < 6) && <h2> Wait, until others join! </h2>}
                     {!signedUser.userId && <LoginNewUser newUser={newUser} setNewUser={setNewUser} logNewUser={logNewUser} />}
                 </div>
             </main>

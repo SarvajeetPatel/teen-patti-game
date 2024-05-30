@@ -5,7 +5,7 @@ function LoginNewUser({ newUser, setNewUser, logNewUser }) {
         <div className="card w-100 text-center border-white">
             <div className="row">
                 <div className="col-12">
-                    <h3>Enter UserName</h3>
+                    <h3> Enter UserName </h3>
                 </div>
                 <div className="d-flex justify-content-center py-1">
                     <div className="col-4">

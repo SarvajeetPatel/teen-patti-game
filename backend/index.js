@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid'
 const httpServer = createServer()
 const io = new Server(httpServer, {
     cors: {
-        origin: ["http://192.168.1.101:3000", "http://localhost:3000"],
+        origin: "*",
         methods: ["GET", "POST"]
     }
 })

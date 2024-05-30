@@ -97,9 +97,22 @@ function MainGame({ newUser }) {
     }, [timer, currCards, total, currUser, blindAmt, callAmt])
 
     useEffect(() => {
-        let tempWinner = []
-        if (Object.keys(newObject).length === 1 || flag) {
-            Object.keys(newObject).map((cards) => {
+        let tempWinner = [], tempObj = Object.keys(newObject)
+        if (tempObj.length === 1 || flag) {
+
+            if (tempObj.length === 2) {
+                let tempCurrCards = currCards
+                Object.keys(tempCurrCards).map(tempVal =>
+                    tempCurrCards[tempVal].map(val => {
+                        if (val.status === 'blind') {
+                            val.status = 'call'
+                        }
+                        return true
+                    })
+                )
+            }
+
+            tempObj.map((cards) => {
                 let tempCard = newObject[cards], diff1, diff2
                 let sortedArray = tempCard.sort((a, b) => (a.value - b.value) > 0 ? 1 : -1)
 
