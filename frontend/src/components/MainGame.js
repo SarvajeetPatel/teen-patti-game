@@ -378,6 +378,7 @@ function MainGame({ newUser }) {
 
     return (
         <>
+            <h1> TEEN_PATTI </h1>
             <h3> Logged in as : {newUser} </h3>
             <h2> Players Cards are : </h2>
 
